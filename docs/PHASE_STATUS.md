@@ -284,6 +284,7 @@
 - **Requirement ลูกค้า (docx):** [Details](../from%20customer/PM%20Application%20Requirement%20(Details).docx) · [Details Rev.1](../from%20customer/PM%20Application%20Requirement%20(Details)Rev.1.docx) · [Requirement](../from%20customer/PM%20Application%20Requirement.docx) · [requirement_13_02_63 (003)](../from%20customer/requirement_13_02_63%20(003).docx)  
 - [`SYSTEM_FLOWS.md`](SYSTEM_FLOWS.md) / [`SYSTEM_FLOWS_SIMPLE.md`](SYSTEM_FLOWS_SIMPLE.md) — flow ใช้งานและเทคนิค  
 - [`backend/README.md`](../backend/README.md) / [`database/README.md`](../database/README.md) — รันระบบ dev  
+- [`GIT_UPLOAD.md`](GIT_UPLOAD.md) — เอา repo ขึ้น Git / remote / push  
 
 | เวอร์ชัน | หมายเหตุ |
 |----------|----------|
