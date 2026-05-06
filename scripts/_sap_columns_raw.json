@@ -1,0 +1,970 @@
+[
+  {
+    "path": "from customer/SAP data/Data/Confirm WO.xls",
+    "category": "Confirm WO",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Confirm.",
+          "Counter",
+          "OrdCat",
+          "Order",
+          "Postg date",
+          "Equipment",
+          "WkCtrAct",
+          "Act. work",
+          "Un. WkAct",
+          "PG",
+          "PtAc",
+          "Created On",
+          "Un.",
+          "Rem. Work",
+          "Act.start",
+          "Act.finish",
+          "Act. start",
+          "Act.finish",
+          "CcldConf",
+          "WkCtrPln",
+          "Sys.Status",
+          "Functional Location"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Functional Location & Equipment.xls",
+    "category": "Functional location & equipment",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": []
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Gen task list.xlsx",
+    "category": "Task list",
+    "sheets": [
+      {
+        "sheet": "Gen task list",
+        "headers": [
+          "Task list",
+          "Mainteanance Plan",
+          "Operation"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/General task list.xlsx",
+    "category": "Task list",
+    "sheets": [
+      {
+        "sheet": "PM task list",
+        "headers": [
+          "Task list",
+          "Mainteanance Plan",
+          "Operation"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/GI 1May-12Jun20.xls",
+    "category": "GI",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Order",
+          "Mat. Doc.",
+          "Entry Date",
+          "PO",
+          "Pstng Date",
+          "Doc. Date",
+          "Material Description",
+          "Quantity",
+          "BUn",
+          "Amount in LC",
+          "Crcy",
+          "MvT",
+          "Cost Ctr",
+          "Time",
+          "MatYr",
+          "Material"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/GR 1May-12Jun20.xls",
+    "category": "GR",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Order",
+          "Mat. Doc.",
+          "Entry Date",
+          "PO",
+          "Pstng Date",
+          "Doc. Date",
+          "Material Description",
+          "Quantity",
+          "BUn",
+          "Amount in LC",
+          "Crcy",
+          "MvT",
+          "Cost Ctr",
+          "Time",
+          "MatYr"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/GR 1May-12Jun20.xls.xlsx",
+    "category": "GR",
+    "sheets": [
+      {
+        "sheet": " 1May-12Jun20",
+        "headers": [
+          "Order",
+          "Mat. Doc.",
+          "Entry Date",
+          "PO",
+          "Pstng Date",
+          "Doc. Date",
+          "Material Description",
+          "Quantity",
+          "BUn",
+          "Amount in LC",
+          "Crcy",
+          "MvT",
+          "Cost Ctr",
+          "Time",
+          "MatYr",
+          "Material"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IA17.xls",
+    "category": "IA17",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": []
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IA17.xls.xlsx",
+    "category": "IA17",
+    "sheets": [
+      {
+        "sheet": "IA17",
+        "headers": [
+          "Task list",
+          "450",
+          "1",
+          "6M - ME Flume Transfering Zone (P11)"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IP19.xls",
+    "category": "IP19",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "MntPlan",
+          "Maint. item text",
+          "MaintPlan dscrptn",
+          "Call No.",
+          "PlanDate",
+          "Due packg.",
+          "Call Status",
+          "Item",
+          "Functional Loc.",
+          "FunctLocDescrip.",
+          "Equipment",
+          "Equipment descriptn",
+          "Order",
+          "MC",
+          "Work",
+          "Un."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N (22Apr20).xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "S",
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Description",
+          "Equipment",
+          "Equipment descriptn",
+          "Functional Location",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N 08Jul20.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "Description",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Equipment",
+          "Equipment descriptn",
+          "Functional Loc.",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N rev1.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "S",
+          "MntPlan",
+          "Order",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Type",
+          "Operation short text",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Un.",
+          "MAT",
+          "Description",
+          "FunctLocDescrip.",
+          "Description of technical object",
+          "No.",
+          "Act.finish",
+          "Pers.No."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N ล่าสุด.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "S",
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "Description",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Equipment descriptn",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N ล่าสุด.xlsx",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "IW37N ล่าสุด",
+        "headers": [
+          "S",
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "Description",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Equipment descriptn",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/IW37N.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "C",
+          "Order",
+          "Erl. start",
+          "System status",
+          "OpAc",
+          "Type",
+          "Operation short text",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Un.",
+          "MAT",
+          "Description",
+          "FunctLocDescrip.",
+          "Description of technical object"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Jul'18.xlsx",
+    "category": "Other",
+    "sheets": [
+      {
+        "sheet": "Jul'18",
+        "headers": [
+          "MntPlan",
+          "Maint. item text",
+          "FunctLocDescrip.",
+          "MaintPlan dscrptn",
+          "Call No.",
+          "PlanDate",
+          "Task",
+          "Call Status",
+          "Item",
+          "Functional Location",
+          "Equipment",
+          "Description of technical object",
+          "Order",
+          "MC"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PC50 Y2018 Confirm.xls",
+    "category": "Confirm WO",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Confirm.",
+          "Counter",
+          "OrdCat",
+          "Order",
+          "Postg date",
+          "Created On",
+          "Equipment",
+          "WkCtrAct",
+          "Act. work",
+          "Un. WkAct",
+          "PG",
+          "PtAc",
+          "Rem. Work",
+          "Un.",
+          "Act.start",
+          "Act.finish",
+          "Act. start",
+          "Act.finish",
+          "CcldConf",
+          "WkCtrPln",
+          "Sys.Status",
+          "Functional Location"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PC50 Y2018 Confirm.xlsx",
+    "category": "Confirm WO",
+    "sheets": [
+      {
+        "sheet": "PC50 Y2018 Confirm",
+        "headers": [
+          "Confirm.",
+          "Counter",
+          "OrdCat",
+          "Order",
+          "Postg date",
+          "Created On",
+          "Equipment",
+          "WkCtrAct",
+          "Act. work",
+          "Un. WkAct",
+          "PG",
+          "PtAc",
+          "Rem. Work",
+          "Un.",
+          "Act.start",
+          "Act.finish",
+          "Act. start",
+          "Act.finish",
+          "WkCtrPln",
+          "Sys.Status",
+          "Functional Location"
+        ]
+      },
+      {
+        "sheet": "Sheet1",
+        "headers": []
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PC50 Y2018 Status.xlsx",
+    "category": "PC50",
+    "sheets": [
+      {
+        "sheet": "Work Order Status",
+        "headers": [
+          "Entered by",
+          "Created on",
+          "Order",
+          "Type",
+          "Bsc start",
+          "Description",
+          "System status",
+          "Equipment descriptn",
+          "ActTotSum",
+          "SumTotPlan",
+          "Notifctn",
+          "FunctLocDescrip.",
+          "Mn.wk.ctr",
+          "Cost Ctr",
+          "Equipment"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PC50 Y2018.xlsx",
+    "category": "PC50",
+    "sheets": [
+      {
+        "sheet": "PC50 Y2018",
+        "headers": [
+          "MntPlan",
+          "MaintPlan dscrptn",
+          "Call No.",
+          "PlanDate",
+          "Call Status",
+          "Functional Location",
+          "FunctLocDescrip.",
+          "Order",
+          "Mn.wk.ctr",
+          "Status"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PC50.xlsx",
+    "category": "PC50",
+    "sheets": [
+      {
+        "sheet": "PC50",
+        "headers": [
+          "MntPlan",
+          "Maint. item text",
+          "MaintPlan dscrptn",
+          "PlanDate",
+          "Task",
+          "Call Status",
+          "Functional Location",
+          "FunctLocDescrip.",
+          "Equipment",
+          "Equipment descriptn",
+          "Order",
+          "Mn.wk.ctr"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/PM Database.xlsx",
+    "category": "PM / WO supporting",
+    "sheets": [
+      {
+        "sheet": "Scheduing",
+        "headers": [
+          "MntPlan",
+          "MaintPlan dscrptn",
+          "Call No.",
+          "PlanDate",
+          "Call Status",
+          "Functional Location",
+          "FunctLocDescrip.",
+          "Order",
+          "Mn.wk.ctr"
+        ]
+      },
+      {
+        "sheet": "Work Order Status",
+        "headers": [
+          "Entered by",
+          "Created on",
+          "Order",
+          "Type",
+          "Bsc start",
+          "Description",
+          "System status",
+          "Equipment descriptn",
+          "ActTotSum",
+          "SumTotPlan",
+          "Notifctn",
+          "FunctLocDescrip.",
+          "Mn.wk.ctr",
+          "Cost Ctr",
+          "Equipment"
+        ]
+      },
+      {
+        "sheet": "Confirmation",
+        "headers": [
+          "Confirm.",
+          "Counter",
+          "OrdCat",
+          "Order",
+          "Postg date",
+          "Created On",
+          "Equipment",
+          "WkCtrAct",
+          "Act. work",
+          "Un. WkAct",
+          "PG",
+          "PtAc",
+          "Rem. Work",
+          "Un.",
+          "Act.start",
+          "Act.finish",
+          "Act. start",
+          "Act.finish",
+          "WkCtrPln",
+          "Sys.Status",
+          "Functional Location"
+        ]
+      },
+      {
+        "sheet": "PM task list",
+        "headers": [
+          "Task list",
+          "Mainteanance Plan",
+          "Operation"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Proposal.xlsx",
+    "category": "PM / WO supporting",
+    "sheets": [
+      {
+        "sheet": "Sheet1",
+        "headers": []
+      },
+      {
+        "sheet": "Sheet2",
+        "headers": []
+      },
+      {
+        "sheet": "Sheet3",
+        "headers": []
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Status WO.xlsx",
+    "category": "PM / WO supporting",
+    "sheets": [
+      {
+        "sheet": "Status WO",
+        "headers": [
+          "Entered by",
+          "Created on",
+          "Order",
+          "Type",
+          "Bsc start",
+          "Description",
+          "System status",
+          "Equipment descriptn",
+          "ActTotSum",
+          "SumTotPlan",
+          "Notifctn",
+          "FunctLocDescrip.",
+          "Mn.wk.ctr",
+          "Cost Ctr",
+          "Equipment"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Task list หน้าตาในระบบ SAP.xlsx",
+    "category": "Task list",
+    "sheets": [
+      {
+        "sheet": "Task list ",
+        "headers": [
+          "หน้าจอในระบบ SAP"
+        ]
+      },
+      {
+        "sheet": "Export",
+        "headers": [
+          "Task list",
+          "450",
+          "1",
+          "6M - ME Flume Transfering Zone (P11)"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Task list.xlsx",
+    "category": "Task list",
+    "sheets": [
+      {
+        "sheet": "Task list",
+        "headers": [
+          "S",
+          "Type",
+          "Group",
+          "GrC",
+          "Task list description",
+          "Line"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Work Center list.xls",
+    "category": "Work center list",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "WorkCntr",
+          "Plnt",
+          "Cat",
+          "Resp.",
+          "Description",
+          "Strg Loc"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/Work Order data.xlsx",
+    "category": "Other",
+    "sheets": [
+      {
+        "sheet": "IP19",
+        "headers": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18"
+        ]
+      },
+      {
+        "sheet": "IW37N rev1",
+        "headers": [
+          "S",
+          "MntPlan",
+          "Order",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Type",
+          "act Type",
+          "Operation short text",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Un.",
+          "MAT",
+          "Description",
+          "FunctLocDescrip.",
+          "Description of technical object",
+          "No.",
+          "Act.finish"
+        ]
+      },
+      {
+        "sheet": "PM task list",
+        "headers": [
+          "Task list",
+          "Mainteanance Plan",
+          "Operation",
+          "Type",
+          "Plan time",
+          "Man"
+        ]
+      },
+      {
+        "sheet": "Work Center",
+        "headers": [
+          "WorkCntr",
+          "Plnt",
+          "Cat",
+          "Resp.",
+          "Description",
+          "Type",
+          "Birth date",
+          "Tel.",
+          "Labour cost"
+        ]
+      },
+      {
+        "sheet": "Confirm",
+        "headers": [
+          "เลข Work order",
+          "รหัสช่าง",
+          "เวลาทำงานจริง",
+          "หน่วย",
+          "วันที่เริ่มทำงาน",
+          "วันที่เสร็จ",
+          "เวลาเรื่มทำงาน",
+          "เวลาที่เสร็จ"
+        ]
+      },
+      {
+        "sheet": "Details",
+        "headers": []
+      },
+      {
+        "sheet": "search",
+        "headers": [
+          "เพิ่มหน้าจอเอาไว้ search หา Work Order ทีละ ใบ",
+          "(หน้าจอ SAP)"
+        ]
+      },
+      {
+        "sheet": "Parameter",
+        "headers": []
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Data/ข้อมูลเวลาตั้งแต่ มกราคม.xls",
+    "category": "Other",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Confirm.",
+          "Counter",
+          "OrdCat",
+          "Order",
+          "Postg date",
+          "Equipment",
+          "WkCtrAct",
+          "Act. work",
+          "Un. WkAct",
+          "PG",
+          "PtAc",
+          "Created On",
+          "Un.",
+          "Rem. Work",
+          "Act.start",
+          "Act.finish",
+          "Act. start",
+          "Act.finish",
+          "CcldConf",
+          "WkCtrPln",
+          "Sys.Status",
+          "Functional Location"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Jul/GI 24Jul20.xls",
+    "category": "GI",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "﻿Order",
+          "Mat. Doc.",
+          "Entry Date",
+          "PO",
+          "Pstng Date",
+          "Doc. Date",
+          "Material Description",
+          "Quantity",
+          "BUn",
+          "Amount in LC",
+          "Crcy",
+          "MvT",
+          "Cost Ctr",
+          "MatYr",
+          "Material"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Jul/GR 24Jul20.xls",
+    "category": "GR",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "Order",
+          "Mat. Doc.",
+          "Entry Date",
+          "PO",
+          "Pstng Date",
+          "Doc. Date",
+          "Material Description",
+          "Quantity",
+          "BUn",
+          "Amount in LC",
+          "Crcy",
+          "MvT",
+          "Cost Ctr",
+          "MatYr",
+          "Material"
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Jul/IW37N 24Jul20.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "Description",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Equipment",
+          "Equipment descriptn",
+          "Functional loc.",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  },
+  {
+    "path": "from customer/SAP data/Jul/IW37N May-Jun.xls",
+    "category": "IW37N",
+    "sheets": [
+      {
+        "sheet": "(SAP list export, tab-separated)",
+        "headers": [
+          "MntPlan",
+          "Order",
+          "Type",
+          "MAT",
+          "Bsc start",
+          "Act.finish",
+          "System status",
+          "OpAc",
+          "Operation short text",
+          "Description",
+          "C",
+          "Op.WorkCtr",
+          "Work",
+          "Act. work",
+          "Un.",
+          "Equipment",
+          "Equipment descriptn",
+          "Functional loc.",
+          "FunctLocDescrip."
+        ]
+      }
+    ]
+  }
+]

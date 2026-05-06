@@ -1,0 +1,39 @@
+# Dependencies & build
+node_modules/
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Env & secrets (คงไว้เฉพาะ *.example)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs & debug
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Backend runtime data (ไฟล์แนบจริง)
+backend/data/attachments/
+
+# IDE (เลือกใช้ — ถ้าทีมใช้ settings ร่วม ให้ลบบรรทัดด้านล่างแล้ว commit .vscode ที่ต้องการ)
+# .vscode/
+.idea/
+
+# Optional: โฟลเดอร์ส่วนตัวของเครื่องมือ (ปรับตามทีม)
+# .cursor/
