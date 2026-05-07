@@ -72,11 +72,11 @@ export function HomePage() {
             <Link to={ROUTES.dashboard}>แดชบอร์ด (Chart.js) →</Link>
             <Link to={ROUTES.reportsKpi}>รายงาน KPI (Highcharts) →</Link>
             <Link to={ROUTES.workOrders.list}>รายการใบงาน →</Link>
-            <Link to={ROUTES.workOrders.calendar}>ปฏิทินงาน (ต้นแบบ) →</Link>
+            <Link to={ROUTES.workOrders.calendar}>ปฏิทินงาน →</Link>
             <Link to={ROUTES.import}>นำเข้าข้อมูล SAP (IW37N / Confirm / GI / GR) →</Link>
             <Link to={ROUTES.jobs.hub}>ติดตามงานคิว →</Link>
             <Link to={ROUTES.evidence}>อัปโหลดหลักฐานรูป (WebP) →</Link>
-            <Link to={ROUTES.sapReports}>รายงาน SAP (placeholder) →</Link>
+            <Link to={ROUTES.sapReports}>ศูนย์รายงาน SAP / ประวัตินำเข้า →</Link>
             {canAccessAdminNav(user) ? (
               <Link to={ROUTES.admin.users}>จัดการผู้ใช้ (ต้นแบบ) →</Link>
             ) : null}

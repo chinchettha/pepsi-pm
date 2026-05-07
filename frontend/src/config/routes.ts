@@ -7,6 +7,7 @@ export const ROUTES = {
   workOrders: {
     list: '/work-orders',
     calendar: '/work-orders/calendar',
+    rescheduleHistory: '/work-orders/reschedule-history',
     detail: (workOrderId: string | number) =>
       `/work-orders/${encodeURIComponent(String(workOrderId))}`,
   },

@@ -7,6 +7,7 @@ import { workOrdersRouter } from './workOrders.js';
 import { taskLogAttachmentsRouter } from './taskLogAttachments.js';
 import { dashboardRouter } from './dashboard.js';
 import { adminRouter } from './admin.js';
+import { reasonCodesRouter } from './reasonCodes.js';
 
 const apiVersion = '0.1.0';
 
@@ -21,6 +22,7 @@ export function createApiV1Router(): Router {
   v1.use('/imports', importsRouter);
   v1.use('/import-batches', importBatchesRouter);
   v1.use('/jobs', jobsRouter);
+  v1.use('/reason-codes', reasonCodesRouter);
   v1.use('/work-orders', workOrdersRouter);
   v1.use('/task-logs', taskLogAttachmentsRouter);
   v1.use('/dashboard', dashboardRouter);

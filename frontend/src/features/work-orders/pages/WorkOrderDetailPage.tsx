@@ -4,6 +4,7 @@ import { Button, Card, Descriptions, Result, Space, Typography } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { evidenceWithWorkOrder, ROUTES } from '../../../config/routes';
 import { ApiError } from '../../../api/client';
+import { WorkOrderConfirmPanel } from '../components/WorkOrderConfirmPanel';
 import { fetchWorkOrder } from '../api';
 
 function formatCell(v: string | number | null | undefined): string {
@@ -65,6 +66,9 @@ export function WorkOrderDetailPage() {
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
       <Space wrap align="center">
         <Link to={ROUTES.workOrders.list}>← รายการใบงาน</Link>
+        <Link to={`${ROUTES.workOrders.rescheduleHistory}?workOrderId=${encodeURIComponent(String(id))}`}>
+          ประวัติการย้ายแผนงาน
+        </Link>
         <Typography.Title level={4} style={{ margin: 0 }}>
           ใบงาน #{id}
         </Typography.Title>
@@ -97,6 +101,7 @@ export function WorkOrderDetailPage() {
           </>
         ) : null}
       </Card>
+      {item ? <WorkOrderConfirmPanel workOrderId={Number(item.id)} /> : null}
     </Space>
   );
 }

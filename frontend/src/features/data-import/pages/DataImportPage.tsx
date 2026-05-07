@@ -290,7 +290,7 @@ export function DataImportPage() {
         onCancel={() => setErrorsBatchId(null)}
         footer={null}
         width={720}
-        destroyOnClose
+        destroyOnHidden
       >
         <Table<ImportErrorRow>
           size="small"

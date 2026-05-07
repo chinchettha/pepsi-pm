@@ -25,9 +25,12 @@ export function JobStatusPage() {
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      <Space>
+      <Space wrap>
+        <Link to={ROUTES.jobs.hub}>
+          <Button icon={<ArrowLeftOutlined />}>กลับรายการงานคิว</Button>
+        </Link>
         <Link to={ROUTES.import}>
-          <Button icon={<ArrowLeftOutlined />}>กลับนำเข้า SAP</Button>
+          <Button>นำเข้า SAP</Button>
         </Link>
         <Button icon={<ReloadOutlined />} onClick={() => void q.refetch()}>
           รีเฟรช

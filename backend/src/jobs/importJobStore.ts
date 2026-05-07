@@ -30,7 +30,7 @@ export async function enqueueImportJob(
   payload: Record<string, unknown>
 ): Promise<number> {
   const [r] = await pool.execute<ResultSetHeader>(
-    `INSERT INTO import_jobs (job_type, payload_json, status) VALUES (?, CAST(? AS JSON), 'pending')`,
+    `INSERT INTO import_jobs (job_type, payload_json, status) VALUES (?, ?, 'pending')`,
     [jobType, JSON.stringify(payload)]
   );
   return Number(r.insertId);

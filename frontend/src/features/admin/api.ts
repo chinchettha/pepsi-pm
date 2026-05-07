@@ -57,3 +57,57 @@ export function patchAdminUser(userId: number, body: PatchAdminUserBody): Promis
     body: JSON.stringify(body),
   });
 }
+
+export type AdminStatusTone = 'green' | 'blue' | 'red' | 'default';
+
+export type AdminStatusColorMapping = {
+  code: string;
+  tone: AdminStatusTone;
+  label: string | null;
+  priority: number;
+  isActive: boolean;
+  isProtected?: boolean;
+};
+
+export type AdminStatusColorMappingsResponse = {
+  items: AdminStatusColorMapping[];
+  protectedCodes?: string[];
+  requestId?: string;
+};
+
+export function fetchAdminStatusColorMappings(): Promise<AdminStatusColorMappingsResponse> {
+  return apiJson<AdminStatusColorMappingsResponse>('/api/v1/admin/status-color-mappings', {
+    method: 'GET',
+  });
+}
+
+export type UpsertAdminStatusColorMappingBody = {
+  tone: AdminStatusTone;
+  label?: string | null;
+  priority?: number;
+  isActive?: boolean;
+};
+
+export type UpsertAdminStatusColorMappingResponse = {
+  item: AdminStatusColorMapping | null;
+  requestId?: string;
+};
+
+export function upsertAdminStatusColorMapping(
+  code: string,
+  body: UpsertAdminStatusColorMappingBody
+): Promise<UpsertAdminStatusColorMappingResponse> {
+  return apiJson<UpsertAdminStatusColorMappingResponse>(
+    `/api/v1/admin/status-color-mappings/${encodeURIComponent(code)}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }
+  );
+}
+
+export async function deleteAdminStatusColorMapping(code: string): Promise<void> {
+  await apiJson<unknown>(`/api/v1/admin/status-color-mappings/${encodeURIComponent(code)}`, {
+    method: 'DELETE',
+  });
+}

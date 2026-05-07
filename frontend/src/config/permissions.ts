@@ -5,6 +5,7 @@ export const PERMISSIONS = {
   ADMIN_USERS: 'admin.users',
   IMPORT_RUN: 'import.run',
   WORK_ORDER_EDIT: 'work_order.edit',
+  ORDER_CONFIRMATION_CREATE: 'order_confirmation.create',
   REPORT_DASHBOARD: 'report.dashboard',
 } as const;
 

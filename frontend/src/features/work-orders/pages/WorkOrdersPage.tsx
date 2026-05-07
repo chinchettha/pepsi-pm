@@ -21,6 +21,16 @@ const columns: ColumnsType<WorkOrderRow> = [
   { title: 'Status', dataIndex: 'system_status', width: 120 },
   { title: 'Planned start', dataIndex: 'planned_start', width: 160 },
   { title: 'Planned finish', dataIndex: 'planned_finish', width: 160 },
+  {
+    title: 'History',
+    key: 'history',
+    width: 120,
+    render: (_, row) => (
+      <Link to={`${ROUTES.workOrders.rescheduleHistory}?workOrderId=${encodeURIComponent(String(row.id))}`}>
+        ดูย้อนหลัง
+      </Link>
+    ),
+  },
 ];
 
 export function WorkOrdersPage() {
@@ -36,6 +46,9 @@ export function WorkOrdersPage() {
     <Card title="ใบงาน (Work orders)">
       <Typography.Paragraph type="secondary">
         ข้อมูลจาก <code>GET /api/v1/work-orders</code> — หลังนำเข้า SAP / normalize แล้วจะมีแถวในตาราง
+      </Typography.Paragraph>
+      <Typography.Paragraph>
+        <Link to={ROUTES.workOrders.rescheduleHistory}>ไปหน้าประวัติการย้ายแผนงานทั้งหมด</Link>
       </Typography.Paragraph>
       <Table<WorkOrderRow>
         rowKey={(r) => String(r.id)}

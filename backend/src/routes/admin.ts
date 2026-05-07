@@ -4,6 +4,10 @@ import { z } from 'zod';
 import { requireAuth } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/requirePermission.js';
 import { getPool } from '../db/pool.js';
+import {
+  listStatusColorMappings,
+  type StatusTone,
+} from '../services/statusColorMappings.js';
 
 export const adminRouter = Router();
 
@@ -37,6 +41,16 @@ const patchBodySchema = z
     message: 'Provide at least one of isActive, roleIds',
   });
 
+const statusToneSchema = z.enum(['green', 'blue', 'red', 'default']);
+const upsertStatusColorBody = z.object({
+  tone: statusToneSchema,
+  label: z.string().trim().max(255).nullable().optional(),
+  priority: z.number().int().min(0).max(10_000).optional(),
+  isActive: z.boolean().optional(),
+});
+
+const protectedStatusCodes = new Set(['TECO', 'REL']);
+
 adminRouter.get('/roles', async (req, res, next) => {
   try {
     const pool = getPool();
@@ -49,6 +63,104 @@ adminRouter.get('/roles', async (req, res, next) => {
       label: r.label,
     }));
     res.json({ items, requestId: req.requestId });
+  } catch (e) {
+    next(e);
+  }
+});
+
+adminRouter.get('/status-color-mappings', async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const items = await listStatusColorMappings(pool);
+    res.json({
+      items: items.map((x) => ({ ...x, isProtected: protectedStatusCodes.has(x.code) })),
+      protectedCodes: [...protectedStatusCodes],
+      requestId: req.requestId,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+adminRouter.put('/status-color-mappings/:code', async (req, res, next) => {
+  try {
+    const code = String(req.params.code ?? '').toUpperCase().trim();
+    if (!/^[A-Z0-9_]{2,32}$/.test(code)) {
+      res.status(400).json({
+        error: { code: 'INVALID_STATUS_CODE', message: 'code must match ^[A-Z0-9_]{2,32}$' },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    if (protectedStatusCodes.has(code)) {
+      res.status(403).json({
+        error: {
+          code: 'PROTECTED_STATUS_CODE',
+          message: `Cannot modify protected system status code: ${code}`,
+        },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    const body = upsertStatusColorBody.parse(req.body ?? {});
+    const pool = getPool();
+    await pool.query(
+      `INSERT INTO status_color_mappings (code, tone, label, priority, is_active)
+       VALUES (?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         tone = VALUES(tone),
+         label = VALUES(label),
+         priority = VALUES(priority),
+         is_active = VALUES(is_active)`,
+      [
+        code,
+        body.tone as StatusTone,
+        body.label ?? null,
+        body.priority ?? 100,
+        body.isActive === undefined ? 1 : body.isActive ? 1 : 0,
+      ]
+    );
+    const items = await listStatusColorMappings(pool);
+    const item = items.find((x) => x.code === code) ?? null;
+    res.json({
+      item: item ? { ...item, isProtected: protectedStatusCodes.has(item.code) } : null,
+      requestId: req.requestId,
+    });
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      res.status(400).json({
+        error: { code: 'VALIDATION_ERROR', message: e.message },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    next(e);
+  }
+});
+
+adminRouter.delete('/status-color-mappings/:code', async (req, res, next) => {
+  try {
+    const code = String(req.params.code ?? '').toUpperCase().trim();
+    if (!/^[A-Z0-9_]{2,32}$/.test(code)) {
+      res.status(400).json({
+        error: { code: 'INVALID_STATUS_CODE', message: 'code must match ^[A-Z0-9_]{2,32}$' },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    if (protectedStatusCodes.has(code)) {
+      res.status(403).json({
+        error: {
+          code: 'PROTECTED_STATUS_CODE',
+          message: `Cannot delete protected system status code: ${code}`,
+        },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    const pool = getPool();
+    await pool.query(`DELETE FROM status_color_mappings WHERE code = ?`, [code]);
+    res.status(204).send();
   } catch (e) {
     next(e);
   }

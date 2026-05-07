@@ -18,6 +18,31 @@ export function fetchJobStatus(jobId: string): Promise<ImportJobStatusDto> {
   return apiJson<ImportJobStatusDto>(`/api/v1/jobs/${jobId}`, { method: 'GET' });
 }
 
+export type ImportJobListRow = {
+  id: string | number;
+  job_type: string;
+  status: string;
+  attempts: number;
+  max_attempts: number;
+  last_error: string | null;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+};
+
+export type ImportJobsListResponse = {
+  items: ImportJobListRow[];
+  total: number;
+  limit: number;
+  offset: number;
+  requestId?: string;
+};
+
+export function fetchImportJobsList(limit = 40, offset = 0): Promise<ImportJobsListResponse> {
+  const q = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+  return apiJson<ImportJobsListResponse>(`/api/v1/jobs?${q}`, { method: 'GET' });
+}
+
 export type JobEnqueueResponse = {
   jobId: string;
   jobType: string;

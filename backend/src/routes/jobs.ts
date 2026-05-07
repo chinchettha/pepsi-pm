@@ -16,6 +16,28 @@ export const jobsRouter = Router();
 
 jobsRouter.use(requireAuth);
 
+/** รายการงานคิว (normalize / KPI snapshot) — สำหรับหน้า FE /jobs */
+jobsRouter.get('/', async (req, res, next) => {
+  try {
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 40));
+    const offset = Math.max(0, Number(req.query.offset) || 0);
+    const pool = getPool();
+    const [rows] = await pool.query(
+      `SELECT id, job_type, status, attempts, max_attempts, last_error,
+              created_at, started_at, finished_at
+       FROM import_jobs
+       ORDER BY id DESC
+       LIMIT ? OFFSET ?`,
+      [limit, offset]
+    );
+    const [countRows] = await pool.query('SELECT COUNT(*) AS cnt FROM import_jobs');
+    const total = Number((countRows as { cnt: number }[])[0]?.cnt ?? 0);
+    res.json({ items: rows, total, limit, offset, requestId: req.requestId });
+  } catch (e) {
+    next(e);
+  }
+});
+
 jobsRouter.post('/normalize-batch', requirePermission('import.run'), async (req, res, next) => {
   try {
     const { batchId } = normalizeBody.parse(req.body);

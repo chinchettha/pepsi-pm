@@ -15,12 +15,13 @@ import { EvidenceUploadPage } from './features/evidence/pages/EvidenceUploadPage
 import { JobStatusPage } from './features/jobs/pages/JobStatusPage';
 import { WorkOrdersPage } from './features/work-orders/pages/WorkOrdersPage';
 import { WorkOrderDetailPage } from './features/work-orders/pages/WorkOrderDetailPage';
+import { WorkOrderRescheduleHistoryPage } from './features/work-orders/pages/WorkOrderRescheduleHistoryPage';
 import { SapReportsPage } from './features/sap/pages/SapReportsPage';
 import { PERMISSIONS } from './config/permissions';
 import { errorRoute, ROUTES, ROUTE_SEGMENTS } from './config/routes';
 import { AdminUsersPage } from './features/admin/pages/AdminUsersPage';
-import { WorkCalendarPlaceholderPage } from './features/work-orders/pages/WorkCalendarPlaceholderPage';
-import { JobsHubPlaceholderPage } from './features/jobs/pages/JobsHubPlaceholderPage';
+import { WorkCalendarPage } from './features/work-orders/pages/WorkCalendarPage';
+import { JobsHubPage } from './features/jobs/pages/JobsHubPage';
 import { PermissionGate } from './routes/PermissionGate';
 import { RequireAuth } from './routes/RequireAuth';
 import './styles/global.css';
@@ -55,7 +56,8 @@ export default function App() {
                   <Route element={<AppShellLayout />}>
                     <Route path={ROUTES.home} element={<HomePage />} />
                     <Route path={ROUTES.workOrders.list} element={<WorkOrdersPage />} />
-                    <Route path={ROUTES.workOrders.calendar} element={<WorkCalendarPlaceholderPage />} />
+                    <Route path={ROUTES.workOrders.calendar} element={<WorkCalendarPage />} />
+                    <Route path={ROUTES.workOrders.rescheduleHistory} element={<WorkOrderRescheduleHistoryPage />} />
                     <Route path={ROUTE_SEGMENTS.workOrderDetail} element={<WorkOrderDetailPage />} />
                     <Route path={ROUTES.import} element={<DataImportPage />} />
                     <Route path={ROUTES.dashboard} element={<DashboardPage />} />
@@ -73,7 +75,7 @@ export default function App() {
                     />
                     <Route path={ROUTES.sapReports} element={<SapReportsPage />} />
                     <Route path={ROUTES.evidence} element={<EvidenceUploadPage />} />
-                    <Route path={ROUTES.jobs.hub} element={<JobsHubPlaceholderPage />} />
+                    <Route path={ROUTES.jobs.hub} element={<JobsHubPage />} />
                     <Route path={ROUTE_SEGMENTS.jobDetail} element={<JobStatusPage />} />
                     <Route
                       path={ROUTES.admin.users}
