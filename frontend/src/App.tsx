@@ -20,7 +20,8 @@ import { SapReportsPage } from './features/sap/pages/SapReportsPage';
 import { PERMISSIONS } from './config/permissions';
 import { errorRoute, ROUTES, ROUTE_SEGMENTS } from './config/routes';
 import { AdminUsersPage } from './features/admin/pages/AdminUsersPage';
-import { WorkCalendarPage } from './features/work-orders/pages/WorkCalendarPage';
+import { WorkCalendarPage } from './features/scheduling/pages/WorkCalendarPage';
+import { DailyAssignmentReportPage } from './features/scheduling/pages/DailyAssignmentReportPage';
 import { JobsHubPage } from './features/jobs/pages/JobsHubPage';
 import { PermissionGate } from './routes/PermissionGate';
 import { RequireAuth } from './routes/RequireAuth';
@@ -57,6 +58,10 @@ export default function App() {
                     <Route path={ROUTES.home} element={<HomePage />} />
                     <Route path={ROUTES.workOrders.list} element={<WorkOrdersPage />} />
                     <Route path={ROUTES.workOrders.calendar} element={<WorkCalendarPage />} />
+                    <Route
+                      path={ROUTES.workOrders.dailyAssignmentReport}
+                      element={<DailyAssignmentReportPage />}
+                    />
                     <Route path={ROUTES.workOrders.rescheduleHistory} element={<WorkOrderRescheduleHistoryPage />} />
                     <Route path={ROUTE_SEGMENTS.workOrderDetail} element={<WorkOrderDetailPage />} />
                     <Route path={ROUTES.import} element={<DataImportPage />} />

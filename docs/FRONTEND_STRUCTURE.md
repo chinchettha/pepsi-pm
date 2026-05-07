@@ -102,12 +102,20 @@ frontend/
 │   │   │   ├── api.ts                       # wrap endpoints/import.ts
 │   │   │   └── index.ts
 │   │   │
-│   │   ├── work-orders/             # F02 list + รายละเอียด (เชื่อม `GET /api/v1/work-orders`, `GET …/:id`)
+│   │   ├── work-orders/             # F02 รายการ + รายละเอียด (เชื่อม `GET /api/v1/work-orders`, `GET …/:id`)
 │   │   │   ├── pages/
 │   │   │   │   ├── WorkOrdersPage.tsx        # /work-orders — ตาราง + ลิงก์ Order # → detail
-│   │   │   │   └── WorkOrderDetailPage.tsx   # /work-orders/:workOrderId — Descriptions + ลิงก์หลักฐาน
-│   │   │   └── api.ts                        # fetchWorkOrders, fetchWorkOrder, createTaskLog
-│   │   ├── calendar/                # F02 Month/Week/Day, DnD, สี, Reason
+│   │   │   │   ├── WorkOrderDetailPage.tsx   # /work-orders/:workOrderId
+│   │   │   │   └── WorkOrderRescheduleHistoryPage.tsx
+│   │   │   ├── components/
+│   │   │   │   └── WorkOrderConfirmPanel.tsx
+│   │   │   └── api.ts                        # สัญญา API ใบงาน + ปฏิทิน/รายงาน (ใช้ร่วมกับ scheduling)
+│   │   ├── scheduling/              # F02 ปฏิทิน + รายงานมอบหมาย — สอด `docs/product/scheduling/` แบบ 1:1
+│   │   │   ├── README.md
+│   │   │   └── pages/
+│   │   │       ├── WorkCalendarPage.tsx      # /work-orders/calendar
+│   │   │       └── DailyAssignmentReportPage.tsx  # /work-orders/daily-assignment
+│   │   ├── calendar/                # (แผนอนาคต / component ย่อย — ปัจจุบันใช้ scheduling/pages)
 │   │   ├── assignments/             # มอบหมายช่าง, available hour (URS)
 │   │   ├── confirmations/           # F05 confirm WO, reason, sync status
 │   │   ├── materials-handheld/     # QR, TECO, GI context (F03/F04 UI slice)
@@ -180,7 +188,7 @@ frontend/
 
 | ID | Feature | โฟลเดอร์หลักใน `features/` | หมายเหตุสั้น |
 |----|---------|---------------------------|----------------|
-| F02 | ปฏิทิน / search / filter | `calendar/`, `work-orders/` | Drag&Drop, สี, Reason — แยก component ย่อยภายใน `calendar/` |
+| F02 | ปฏิทิน / search / filter | **`scheduling/`** (ปฏิทิน + รายงานรายวัน), `work-orders/` (list/detail) | UI ปฏิทินอยู่ `features/scheduling/pages/` — สอดเอกสาร `docs/product/scheduling/` |
 | F09 | Dashboard KPI | `dashboard/` | กราฟ/ตาราง backlog — ดึง API aggregate |
 | F10 | RBAC | `auth/`, `admin/` | route guard + permission hook |
 | F07 | Work center list | `work-centers/` | ตาราง read-only หรือ CRUD ตาม scope |
@@ -191,7 +199,7 @@ frontend/
 | F06 / F07 | FL / Work center | `work-centers/` (+ import แยกภายหลังถ้ามี) | ไฟล์ FL อาจไม่แบน — ล็อกกับทีม SAP ก่อนมี UI |
 | F12 | Deploy พอร์ต 3000 | `vite.config.ts`, `Dockerfile` (เมื่อเพิ่ม) | ไม่ใช่โฟลเดอร์ UI |
 
-หลัง import แล้ว มุมมองข้อมูล: **`work-orders/`**, **`movements/`**, **`calendar/`** — อ่านจาก API ไม่ใช่โฟลเดอร์อัปโหลดไฟล์
+หลัง import แล้ว มุมมองข้อมูล: **`work-orders/`**, **`scheduling/`**, **`movements/`** — อ่านจาก API ไม่ใช่โฟลเดอร์อัปโหลดไฟล์
 
 ---
 

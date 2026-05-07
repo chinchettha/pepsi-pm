@@ -17,6 +17,13 @@
 │   └── migrations/
 │       └── V001__initial_schema.sql # CREATE DATABASE + ตาราง + seed
 ├── docs/
+│   ├── README.md                      # ดัชนีเอกสาร — เริ่มที่นี่ + ลิงก์ไป product/
+│   ├── APPLICATION_STRUCTURE.md       # ชั้นข้อมูล: ลูกค้า → product → engineering → โค้ด
+│   ├── product/                       # สเปกตามโดเมนลูกค้า (scheduling ฯลฯ) — ดู product/README.md
+│   │   ├── README.md
+│   │   ├── _SPEC_TEMPLATE.md
+│   │   └── scheduling/
+│   │       └── PM_SCHEDULING_SHEET_REFERENCE.md
 │   ├── CUSTOMER_FROM_FOLDER_MANIFEST.md
 │   ├── DATABASE_DESIGN_DRAFT.md
 │   ├── INFRASTRUCTURE.md
@@ -60,7 +67,7 @@
 | `frontend/` | **แผน** — แอป React (พอร์ต 3000); โครงละเอียด: [`FRONTEND_STRUCTURE.md`](FRONTEND_STRUCTURE.md) |
 | `database/` | Migration, ชื่อฐานล็อก, คำสั่งรัน MariaDB |
 | `docs/api/` | OpenAPI ร่าง — [`api/openapi.yaml`](api/openapi.yaml) |
-| `docs/` | SRS Pepsi, แผนงาน, ออกแบบ DB/FE, คอลัมน์ SAP, คู่มือติดตั้ง |
+| `docs/` | **ดัชนี:** [`README.md`](README.md) · สเปกโดเมนลูกค้าใน **`product/`** · SRS Pepsi, แผนงาน, ออกแบบ DB/FE, คอลัมน์ SAP, คู่มือติดตั้ง |
 | `from customer/` | เอกสารลูกค้า + ตัวอย่างข้อมูล SAP — **ยึดเป็นแหล่งความจริงของ requirement** |
 | `from customer/SAP data/` | ไฟล์ export ใช้สร้าง [`SAP_DATA_IMPORT_EXPORT_COLUMNS.md`](SAP_DATA_IMPORT_EXPORT_COLUMNS.md) |
 | `scripts/` | สคริปต์ช่วยสกัดคอลัมน์ / สร้างเอกสารจาก `.docx` |

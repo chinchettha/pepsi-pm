@@ -73,6 +73,7 @@ export function HomePage() {
             <Link to={ROUTES.reportsKpi}>รายงาน KPI (Highcharts) →</Link>
             <Link to={ROUTES.workOrders.list}>รายการใบงาน →</Link>
             <Link to={ROUTES.workOrders.calendar}>ปฏิทินงาน →</Link>
+            <Link to={ROUTES.workOrders.dailyAssignmentReport}>รายงานมอบหมายรายวัน →</Link>
             <Link to={ROUTES.import}>นำเข้าข้อมูล SAP (IW37N / Confirm / GI / GR) →</Link>
             <Link to={ROUTES.jobs.hub}>ติดตามงานคิว →</Link>
             <Link to={ROUTES.evidence}>อัปโหลดหลักฐานรูป (WebP) →</Link>

@@ -18,7 +18,16 @@ function fmt(s: string | null | undefined): string {
 
 function toneTag(tone: string | null) {
   if (!tone) return <Tag>-</Tag>;
-  const color = tone === 'green' ? 'green' : tone === 'red' ? 'red' : tone === 'blue' ? 'blue' : 'default';
+  const color =
+    tone === 'green'
+      ? 'green'
+      : tone === 'red'
+        ? 'red'
+        : tone === 'blue'
+          ? 'blue'
+          : tone === 'orange'
+            ? 'orange'
+            : 'default';
   return <Tag color={color}>{tone}</Tag>;
 }
 

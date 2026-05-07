@@ -6,7 +6,12 @@ import { z } from 'zod';
 import { requireAuth } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/requirePermission.js';
 import { getPool } from '../db/pool.js';
-import { inferStatusTone, listStatusColorMappings } from '../services/statusColorMappings.js';
+import {
+  calendarBlockTone,
+  canRescheduleWorkOrderOnCalendar,
+  rescheduleRequiresReasonCode,
+} from '../services/calendarRescheduleRules.js';
+import { listStatusColorMappings } from '../services/statusColorMappings.js';
 
 const createTaskLogBody = z.object({
   logType: z.string().min(1).max(32).optional(),
@@ -34,12 +39,20 @@ const planningBody = z.object({
   plannedFinish: z.string(),
 });
 const closeWorkOrderBody = z.object({
-  workCenterActual: z.union([z.string().max(64), z.null()]).optional(),
+  workCenterActual: z.union([z.string().max(128), z.null()]).optional(),
+  /** When non-empty, inserts one order_confirmation per worker (same times/hours). */
+  workCentersActual: z.array(z.string().trim().min(1).max(128)).max(50).optional(),
   actualStart: z.string(),
   actualFinish: z.string(),
   actualWorkHours: z.union([z.number(), z.null()]).optional(),
   comment: z.union([z.string().max(500), z.null()]).optional(),
 });
+
+function buildCloseConfirmationNotes(workerLabel: string, comment: string | null | undefined): string {
+  const prefix = `Actual: ${workerLabel}`;
+  const c = comment?.trim();
+  return c ? `${prefix}\n${c}` : prefix;
+}
 const calendarFilterConfigBody = z.object({
   role: z.enum(['admin', 'planner']),
   functionalLocations: z.array(z.string().trim().min(1).max(255)).max(500),
@@ -195,11 +208,19 @@ workOrdersRouter.post('/:workOrderId/reschedule', requirePermission('work_order.
 
     const pool = getPool();
     const [rows] = await pool.query<RowDataPacket[]>(
-      `SELECT id, system_status, planned_start, planned_finish FROM work_orders WHERE id = ? LIMIT 1`,
+      `SELECT id, system_status, planned_start, planned_finish, order_number, ui_metadata_json
+       FROM work_orders WHERE id = ? LIMIT 1`,
       [woId]
     );
     const wo = rows[0] as
-      | { id: number; system_status: string | null; planned_start: Date | null; planned_finish: Date | null }
+      | {
+          id: number;
+          system_status: string | null;
+          planned_start: Date | null;
+          planned_finish: Date | null;
+          order_number: string | null;
+          ui_metadata_json: unknown;
+        }
       | undefined;
     if (!wo) {
       res.status(404).json({
@@ -209,18 +230,34 @@ workOrdersRouter.post('/:workOrderId/reschedule', requirePermission('work_order.
       return;
     }
 
-    const mappings = await listStatusColorMappings(pool);
-    const tone = inferStatusTone(wo.system_status, mappings);
-    if (tone === 'green') {
+    const calendarTone = calendarBlockTone({
+      system_status: wo.system_status,
+      order_number: wo.order_number,
+      ui_metadata_json: wo.ui_metadata_json,
+    });
+    if (
+      !canRescheduleWorkOrderOnCalendar({
+        system_status: wo.system_status,
+        order_number: wo.order_number,
+        ui_metadata_json: wo.ui_metadata_json,
+      })
+    ) {
       res.status(400).json({
-        error: { code: 'WORK_ORDER_LOCKED', message: 'Green status work order cannot be rescheduled' },
+        error: {
+          code: 'WORK_ORDER_NOT_RESCHEDULABLE',
+          message:
+            'Calendar reschedule allowed only for red work orders, or blue estimates that include a Call no. in metadata',
+        },
         requestId: req.requestId,
       });
       return;
     }
-    if (tone === 'red' && !reasonCode) {
+    if (rescheduleRequiresReasonCode(calendarTone) && !reasonCode) {
       res.status(400).json({
-        error: { code: 'REASON_REQUIRED', message: 'Reason Code is required for red status work order' },
+        error: {
+          code: 'REASON_REQUIRED',
+          message: 'Reason Code is required for this work order type',
+        },
         requestId: req.requestId,
       });
       return;
@@ -274,7 +311,7 @@ workOrdersRouter.post('/:workOrderId/reschedule', requirePermission('work_order.
           },
           reasonCode,
           comment,
-          statusTone: tone,
+          calendarTone,
         }),
       ]
     );
@@ -286,7 +323,7 @@ workOrdersRouter.post('/:workOrderId/reschedule', requirePermission('work_order.
         plannedFinish: toMysqlDateTime(newFinish),
         reasonCode,
         comment,
-        statusTone: tone,
+        calendarTone,
       },
       requestId: req.requestId,
     });
@@ -416,30 +453,73 @@ workOrdersRouter.post('/:workOrderId/close-work-order', requirePermission('work_
     const actualHours =
       body.actualWorkHours !== undefined && body.actualWorkHours !== null ? Number(body.actualWorkHours) : computedHours;
 
-    await pool.query(`UPDATE work_orders SET work_center_actual = ? WHERE id = ?`, [body.workCenterActual ?? null, woId]);
-    const sapLineKey = `close|${woId}|${randomUUID()}`.slice(0, 192);
-    await pool.query(
-      `INSERT INTO order_confirmations (
-         work_order_id, import_batch_id, stg_confirm_row_id, sap_confirm_no, sap_counter, sap_line_key,
-         confirmed_by_user_id, actual_start, actual_finish, actual_work_hours, notes, sync_to_sap_status
-       ) VALUES (?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?, 'not_applicable')`,
-      [
-        woId,
-        sapLineKey,
-        actorId,
-        toMysqlDateTime(start.value),
-        toMysqlDateTime(finish.value),
-        actualHours,
-        body.comment ?? null,
-      ]
-    );
+    const rawCenters =
+      body.workCentersActual && body.workCentersActual.length > 0
+        ? body.workCentersActual
+        : body.workCenterActual != null && String(body.workCenterActual).trim() !== ''
+          ? [String(body.workCenterActual).trim()]
+          : [];
+    if (rawCenters.length === 0) {
+      res.status(400).json({
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Provide workCentersActual (non-empty) or workCenterActual',
+        },
+        requestId: req.requestId,
+      });
+      return;
+    }
+    const workers = [...new Set(rawCenters.map((s) => s.trim()).filter(Boolean))];
+    const joinedCenters = workers.join(', ');
+    if (joinedCenters.length > 512) {
+      res.status(400).json({
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Combined actual worker labels exceed 512 characters',
+        },
+        requestId: req.requestId,
+      });
+      return;
+    }
+
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      await conn.query(`UPDATE work_orders SET work_center_actual = ? WHERE id = ?`, [joinedCenters, woId]);
+      for (const wLabel of workers) {
+        const sapLineKey = `close|${woId}|${randomUUID()}`.slice(0, 192);
+        await conn.query(
+          `INSERT INTO order_confirmations (
+             work_order_id, import_batch_id, stg_confirm_row_id, sap_confirm_no, sap_counter, sap_line_key,
+             confirmed_by_user_id, actual_start, actual_finish, actual_work_hours, notes, sync_to_sap_status
+           ) VALUES (?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?, 'not_applicable')`,
+          [
+            woId,
+            sapLineKey,
+            actorId,
+            toMysqlDateTime(start.value),
+            toMysqlDateTime(finish.value),
+            actualHours,
+            buildCloseConfirmationNotes(wLabel, body.comment),
+          ]
+        );
+      }
+      await conn.commit();
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
+
     res.json({
       item: {
         workOrderId: String(woId),
-        workCenterActual: body.workCenterActual ?? null,
+        workCenterActual: joinedCenters,
         actualStart: toMysqlDateTime(start.value),
         actualFinish: toMysqlDateTime(finish.value),
         actualWorkHours: actualHours,
+        confirmationRowsCreated: workers.length,
       },
       requestId: req.requestId,
     });
@@ -709,7 +789,8 @@ workOrdersRouter.get('/reschedule-history', async (req, res, next) => {
         to: (payload.to as Record<string, unknown>) ?? null,
         reasonCode: (payload.reasonCode as string | null) ?? null,
         comment: (payload.comment as string | null) ?? null,
-        statusTone: (payload.statusTone as string | null) ?? null,
+        statusTone:
+          (payload.calendarTone as string | null) ?? (payload.statusTone as string | null) ?? null,
         createdAt:
           r.created_at instanceof Date ? r.created_at.toISOString() : String(r.created_at ?? ''),
       };
@@ -887,10 +968,11 @@ workOrdersRouter.get('/', async (req, res, next) => {
       const [rows] = await pool.query(
         `SELECT w.id, w.order_number, w.order_type, w.system_status, w.user_status,
                 w.equipment_id, w.work_center_planned, w.work_center_actual, w.planned_start, w.planned_finish, w.ui_metadata_json,
-                oc.actual_start, oc.actual_finish, oc.actual_work_hours
+                oc.actual_start, oc.actual_finish, oc.actual_work_hours, oc.latest_confirmation_confirmed_by_user_id
          FROM work_orders w
          LEFT JOIN (
-           SELECT x.work_order_id, x.actual_start, x.actual_finish, x.actual_work_hours
+           SELECT x.work_order_id, x.actual_start, x.actual_finish, x.actual_work_hours,
+                  x.confirmed_by_user_id AS latest_confirmation_confirmed_by_user_id
            FROM order_confirmations x
            INNER JOIN (
              SELECT work_order_id, MAX(id) AS max_id
@@ -911,6 +993,8 @@ workOrdersRouter.get('/', async (req, res, next) => {
              AND w.planned_finish <= ?
            )
          )
+         /* F02: Planning calendar — PM/CM only (ZB01, ZB02, ZB05); spaces normalized e.g. ZB 01 */
+         AND UPPER(REPLACE(TRIM(COALESCE(w.order_type, '')), ' ', '')) IN ('ZB01', 'ZB02', 'ZB05')
          ORDER BY w.planned_start IS NULL, w.planned_start ASC, w.id ASC
          LIMIT ?`,
         [toBound, fromBound, fromBound, toBound, maxRows]
@@ -927,10 +1011,11 @@ workOrdersRouter.get('/', async (req, res, next) => {
     const [rows] = await pool.query(
       `SELECT w.id, w.order_number, w.order_type, w.system_status, w.user_status,
               w.equipment_id, w.work_center_planned, w.work_center_actual, w.planned_start, w.planned_finish, w.ui_metadata_json,
-              oc.actual_start, oc.actual_finish, oc.actual_work_hours
+              oc.actual_start, oc.actual_finish, oc.actual_work_hours, oc.latest_confirmation_confirmed_by_user_id
        FROM work_orders w
        LEFT JOIN (
-         SELECT x.work_order_id, x.actual_start, x.actual_finish, x.actual_work_hours
+         SELECT x.work_order_id, x.actual_start, x.actual_finish, x.actual_work_hours,
+                x.confirmed_by_user_id AS latest_confirmation_confirmed_by_user_id
          FROM order_confirmations x
          INNER JOIN (
            SELECT work_order_id, MAX(id) AS max_id
@@ -945,6 +1030,135 @@ workOrdersRouter.get('/', async (req, res, next) => {
     const [countRows] = await pool.query('SELECT COUNT(*) AS cnt FROM work_orders');
     const total = Number((countRows as { cnt: number }[])[0]?.cnt ?? 0);
     res.json({ items: rows, total, page, pageSize, requestId: req.requestId });
+  } catch (e) {
+    next(e);
+  }
+});
+
+/** รายงานใบงานที่เกี่ยวข้องกับวันที่เลือก (เดียวกับช่วงปฏิทิน F02 วันเดียว — ZB01/ZB02/ZB05) เพื่อมอบหมายงาน */
+workOrdersRouter.get('/daily-assignment-report', async (req, res, next) => {
+  try {
+    const raw = typeof req.query.date === 'string' ? req.query.date.trim() : '';
+    const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRe.test(raw)) {
+      res.status(400).json({
+        error: {
+          code: 'INVALID_DATE',
+          message: 'Query parameter date (YYYY-MM-DD) is required',
+        },
+        requestId: req.requestId,
+      });
+      return;
+    }
+
+    const pool = getPool();
+    const fromBound = `${raw} 00:00:00.000`;
+    const toBound = `${raw} 23:59:59.999`;
+    const maxRows = 500;
+    const [rows] = await pool.query(
+      `SELECT w.id, w.order_number, w.order_type, w.system_status, w.user_status,
+              w.equipment_id, w.work_center_planned, w.work_center_actual, w.planned_start, w.planned_finish, w.ui_metadata_json,
+              oc.actual_start, oc.actual_finish, oc.actual_work_hours, oc.latest_confirmation_confirmed_by_user_id
+       FROM work_orders w
+       LEFT JOIN (
+         SELECT x.work_order_id, x.actual_start, x.actual_finish, x.actual_work_hours,
+                x.confirmed_by_user_id AS latest_confirmation_confirmed_by_user_id
+         FROM order_confirmations x
+         INNER JOIN (
+           SELECT work_order_id, MAX(id) AS max_id
+           FROM order_confirmations
+           GROUP BY work_order_id
+         ) t ON t.max_id = x.id
+       ) oc ON oc.work_order_id = w.id
+       WHERE (
+         (
+           w.planned_start IS NOT NULL
+           AND w.planned_start <= ?
+           AND (w.planned_finish IS NULL OR w.planned_finish >= ?)
+         )
+         OR (
+           w.planned_start IS NULL
+           AND w.planned_finish IS NOT NULL
+           AND w.planned_finish >= ?
+           AND w.planned_finish <= ?
+         )
+       )
+       AND UPPER(REPLACE(TRIM(COALESCE(w.order_type, '')), ' ', '')) IN ('ZB01', 'ZB02', 'ZB05')
+       ORDER BY w.planned_start IS NULL, w.planned_start ASC, w.id ASC
+       LIMIT ?`,
+      [toBound, fromBound, fromBound, toBound, maxRows]
+    );
+    const items = rows as RowDataPacket[];
+    const n = items.length;
+    res.json({
+      date: raw,
+      items,
+      total: n,
+      page: 1,
+      pageSize: n,
+      truncated: n >= maxRows,
+      requestId: req.requestId,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+/** Tab Task (F02): task_logs ประเภท task_sheet + รายการไฟล์/รูปแนบ */
+workOrdersRouter.get('/:workOrderId/task-sheet', async (req, res, next) => {
+  try {
+    const woId = Number(req.params.workOrderId);
+    if (!Number.isFinite(woId) || woId <= 0) {
+      res.status(400).json({
+        error: { code: 'INVALID_WORK_ORDER_ID', message: 'workOrderId must be a positive integer' },
+        requestId: req.requestId,
+      });
+      return;
+    }
+
+    const pool = getPool();
+    const [woCheck] = await pool.query<RowDataPacket[]>(
+      'SELECT id FROM work_orders WHERE id = ? LIMIT 1',
+      [woId]
+    );
+    if (!Array.isArray(woCheck) || woCheck.length === 0) {
+      res.status(404).json({
+        error: { code: 'WORK_ORDER_NOT_FOUND', message: 'Work order does not exist' },
+        requestId: req.requestId,
+      });
+      return;
+    }
+
+    const [tlRows] = await pool.query<RowDataPacket[]>(
+      `SELECT id FROM task_logs
+       WHERE work_order_id = ? AND log_type = 'task_sheet'
+       ORDER BY id DESC LIMIT 1`,
+      [woId]
+    );
+    const taskLogIdRaw = tlRows[0]?.id;
+    const taskLogId =
+      taskLogIdRaw !== undefined && taskLogIdRaw !== null ? String(Number(taskLogIdRaw)) : null;
+
+    let attachments: Array<{ id: string; mimeType: string | null; byteSize: number | null; createdAt: string }> = [];
+    if (taskLogId) {
+      const [aRows] = await pool.query<RowDataPacket[]>(
+        `SELECT id, mime_type, byte_size, created_at
+         FROM task_log_attachments
+         WHERE task_log_id = ?
+         ORDER BY id DESC`,
+        [taskLogId]
+      );
+      attachments = (
+        aRows as Array<{ id: number; mime_type: string | null; byte_size: number | null; created_at: Date | string }>
+      ).map((r) => ({
+        id: String(r.id),
+        mimeType: r.mime_type,
+        byteSize: r.byte_size != null ? Number(r.byte_size) : null,
+        createdAt: r.created_at instanceof Date ? r.created_at.toISOString() : String(r.created_at),
+      }));
+    }
+
+    res.json({ taskLogId, attachments, requestId: req.requestId });
   } catch (e) {
     next(e);
   }

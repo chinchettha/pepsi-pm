@@ -7,6 +7,8 @@ export const ROUTES = {
   workOrders: {
     list: '/work-orders',
     calendar: '/work-orders/calendar',
+    /** รายงานมอบหมายรายวัน (ZB01–ZB05 ตามช่วงปฏิทิน) */
+    dailyAssignmentReport: '/work-orders/daily-assignment',
     rescheduleHistory: '/work-orders/reschedule-history',
     detail: (workOrderId: string | number) =>
       `/work-orders/${encodeURIComponent(String(workOrderId))}`,

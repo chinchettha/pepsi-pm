@@ -105,7 +105,7 @@
 
 ---
 
-### Supervisor
+### Manager
 
 **Login** `>` **Dashboard** `>` **Review summary (backlog / recent imports / KPI trend)** `>` **KPI report (detail)** `>` **Decide & assign (process / future in-app assignment)**
 

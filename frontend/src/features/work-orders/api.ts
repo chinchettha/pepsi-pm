@@ -15,6 +15,8 @@ export type WorkOrderRow = {
   actual_start?: string | null;
   actual_finish?: string | null;
   actual_work_hours?: string | number | null;
+  /** ผู้ใช้ที่บันทึก confirmation ล่าสุดในระบบ (Close WO); null = ยังไม่มีการยืนยันในแอป */
+  latest_confirmation_confirmed_by_user_id?: string | number | null;
 };
 
 export type WorkOrdersListResponse = {
@@ -34,7 +36,7 @@ export function fetchWorkOrders(page = 1, pageSize = 20): Promise<WorkOrdersList
   });
 }
 
-/** ใบงานที่ช่วงวันที่ทับซ้อนกับ [from, to] (ปิดท้ายรวม) — สำหรับปฏิทิน F02 */
+/** ใบงานที่ช่วงวันที่ทับซ้อนกับ [from, to] (ปิดท้ายรวม) — ปฏิทิน F02 กรองเฉพาะ PM/CM ZB01/ZB02/ZB05 ที่ backend */
 export function fetchWorkOrdersForCalendarRange(
   from: string,
   to: string
@@ -43,6 +45,19 @@ export function fetchWorkOrdersForCalendarRange(
   return apiJson<WorkOrdersListResponse>(`/api/v1/work-orders?${q.toString()}`, {
     method: 'GET',
   });
+}
+
+/** ใบงาน PM/CM (ZB01–ZB05) ที่ทับซ้อนกับวันที่เลือก — สำหรับหน้ารายงานมอบหมายรายวัน */
+export type DailyAssignmentReportResponse = WorkOrdersListResponse & {
+  date: string;
+};
+
+export function fetchDailyAssignmentReport(date: string): Promise<DailyAssignmentReportResponse> {
+  const q = new URLSearchParams({ date });
+  return apiJson<DailyAssignmentReportResponse>(
+    `/api/v1/work-orders/daily-assignment-report?${q.toString()}`,
+    { method: 'GET' }
+  );
 }
 
 export type StatusColorTone = 'green' | 'blue' | 'red' | 'default';
@@ -105,7 +120,8 @@ export type RescheduleWorkOrderResponse = {
     plannedFinish: string;
     reasonCode: string | null;
     comment: string | null;
-    statusTone: string;
+    /** Block tone on calendar when moved (green|red|blue) */
+    calendarTone: string;
   };
   requestId?: string;
 };
@@ -146,7 +162,10 @@ export function postSavePlanning(workOrderId: number, body: SavePlanningBody): P
 }
 
 export type CloseWorkOrderBody = {
+  /** @deprecated Prefer workCentersActual when selecting multiple technicians */
   workCenterActual?: string | null;
+  /** One confirmation row per entry (same times and hours). */
+  workCentersActual?: string[] | null;
   actualStart: string;
   actualFinish: string;
   actualWorkHours?: number | null;
@@ -159,6 +178,7 @@ export type CloseWorkOrderResponse = {
     actualStart: string;
     actualFinish: string;
     actualWorkHours: number;
+    confirmationRowsCreated?: number;
   };
   requestId?: string;
 };
@@ -250,6 +270,26 @@ export function createTaskLog(workOrderId: number, logType = 'photo'): Promise<T
   return apiJson<TaskLogCreatedResponse>(`/api/v1/work-orders/${workOrderId}/task-logs`, {
     method: 'POST',
     body: JSON.stringify({ logType }),
+  });
+}
+
+export type TaskSheetAttachmentRow = {
+  id: string;
+  mimeType: string | null;
+  byteSize: number | null;
+  createdAt: string;
+};
+
+export type TaskSheetBundleResponse = {
+  taskLogId: string | null;
+  attachments: TaskSheetAttachmentRow[];
+  requestId?: string;
+};
+
+/** Tab Task — task_logs.log_type = task_sheet + ไฟล์แนบ */
+export function fetchTaskSheetBundle(workOrderId: number): Promise<TaskSheetBundleResponse> {
+  return apiJson<TaskSheetBundleResponse>(`/api/v1/work-orders/${workOrderId}/task-sheet`, {
+    method: 'GET',
   });
 }
 
